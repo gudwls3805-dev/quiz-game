@@ -82,7 +82,7 @@ def show_list(quizzes):
         print(f"[{i + 1}] {quizzes[i].question}")
     print("-" * 40)
 
-
+best_score = None   # None = "아직 값 없음" (= 아직 안 풂)
 while True:
     print("========================================")
     print("         🎯 나만의 퀴즈 게임 🎯")
@@ -97,13 +97,19 @@ while True:
     choice = input("선택: ").strip()
 
     if choice == "1":
-        play_quiz(quizzes)
+        score = play_quiz(quizzes)
+        if best_score is None or score > best_score:
+            best_score = score
+            print("🎉 새로운 최고 점수입니다!")
     elif choice == "2":
         add_quiz(quizzes)
     elif choice == "3":
         show_list(quizzes)
     elif choice == "4":
-        print("점수 확인 (준비 중)")
+        if best_score is None:
+            print("📊 아직 퀴즈를 푼 적이 없습니다.")
+        else:
+            print(f"🏆 최고 점수: {best_score}문제 정답")
     elif choice == "5":
         print("종료합니다")
         break
