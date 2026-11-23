@@ -46,6 +46,30 @@ def play_quiz(quizzes):
     return score
 
 
+def add_quiz(quizzes):
+    question = input("문제를 입력하세요: ").strip()
+    if question == "":
+        print("⚠️ 문제를 입력해야 합니다. 추가를 취소합니다.")
+        return
+
+    choices = []                      # 선택지를 담을 빈 리스트
+    for i in range(4):                # 4번 반복해서 선택지 4개 받기
+        c = input(f"선택지 {i + 1}: ").strip()
+        if c == "":
+            print("⚠️ 선택지를 입력해야 합니다. 추가를 취소합니다.")
+            return
+        choices.append(c)             # 리스트 끝에 추가
+
+    answer_input = input("정답 번호 (1-4): ").strip()
+    if answer_input not in ["1", "2", "3", "4"]:
+        print("⚠️ 정답은 1~4 중에 입력하세요. 추가를 취소합니다.")
+        return
+    answer = int(answer_input)
+
+    new_quiz = Quiz(question, choices, answer)   # 입력값으로 Quiz 객체 생성
+    quizzes.append(new_quiz)                     # 퀴즈 목록에 추가
+    print("✅ 퀴즈가 추가되었습니다!")
+
 while True:
     print("========================================")
     print("         🎯 나만의 퀴즈 게임 🎯")
@@ -62,7 +86,7 @@ while True:
     if choice == "1":
         play_quiz(quizzes)
     elif choice == "2":
-        print("퀴즈 추가 (준비 중)")
+        add_quiz(quizzes)
     elif choice == "3":
         print("퀴즈 목록 (준비 중)")
     elif choice == "4":
