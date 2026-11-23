@@ -1,3 +1,6 @@
+import json   # ← 맨 위에 추가 (JSON 저장/불러오기 도구)
+
+
 class Quiz:
     def __init__(self, question, choices, answer):
         self.question = question
@@ -12,10 +15,17 @@ class Quiz:
     def is_correct(self, user_answer):
         return user_answer == self.answer
 
+    def to_dict(self):                      # ← 새로 추가
+        # Quiz 객체를 저장 가능한 dict로 변환
+        return {
+            "question": self.question,
+            "choices": self.choices,
+            "answer": self.answer,
+        }
+
 
 class QuizGame:
     def __init__(self):
-        # 게임이 가진 데이터(속성)
         self.quizzes = [
             Quiz("영화 '기생충'의 감독은?", ["박찬욱", "봉준호", "김기덕", "이창동"], 2),
             Quiz("영화 '올드보이'에서 주인공이 갇혀 지낸 기간은?", ["5년", "10년", "15년", "20년"], 3),
@@ -24,6 +34,32 @@ class QuizGame:
             Quiz("영화 '범죄도시'에서 마석도 형사를 연기한 배우는?", ["하정우", "김우빈", "이정재", "마동석"], 4),
         ]
         self.best_score = None
+
+    def save(self):                         # ← 새로 추가: 저장
+        quiz_list = []
+        for q in self.quizzes:
+            quiz_list.append(q.to_dict())   # 객체 → dict
+        data = {"quizzes": quiz_list, "best_score": self.best_score}
+        try:
+            with open("state.json", "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+        except OSError:
+            print("⚠️ 저장 중 오류가 발생했습니다.")
+
+    def load(self):                         # ← 새로 추가: 불러오기
+        try:
+            with open("state.json", "r", encoding="utf-8") as f:
+                data = json.load(f)
+            new_quizzes = []
+            for d in data["quizzes"]:       # dict → 다시 Quiz 객체
+                new_quizzes.append(Quiz(d["question"], d["choices"], d["answer"]))
+            self.quizzes = new_quizzes
+            self.best_score = data["best_score"]
+            print(f"📂 저장된 데이터를 불러왔습니다. (퀴즈 {len(self.quizzes)}개, 최고점수 {self.best_score})")
+        except FileNotFoundError:
+            print("📄 저장 파일이 없어 기본 퀴즈로 시작합니다.")
+        except (json.JSONDecodeError, KeyError):
+            print("⚠️ 저장 파일이 손상되어 기본 퀴즈로 복구합니다.")
 
     def show_menu(self):
         print("========================================")
@@ -56,6 +92,7 @@ class QuizGame:
         if self.best_score is None or score > self.best_score:
             self.best_score = score
             print("🎉 새로운 최고 점수입니다!")
+        self.save()                         # ← 추가: 점수 저장
 
     def add_quiz(self):
         question = input("문제를 입력하세요: ").strip()
@@ -79,6 +116,7 @@ class QuizGame:
 
         self.quizzes.append(Quiz(question, choices, answer))
         print("✅ 퀴즈가 추가되었습니다!")
+        self.save()                         # ← 추가: 추가 후 저장
 
     def show_list(self):
         if len(self.quizzes) == 0:
@@ -97,6 +135,7 @@ class QuizGame:
             print(f"🏆 최고 점수: {self.best_score}문제 정답")
 
     def run(self):
+        self.load()                         # ← 추가: 시작할 때 불러오기
         while True:
             self.show_menu()
             choice = input("선택: ").strip()
@@ -115,6 +154,5 @@ class QuizGame:
                 print("⚠️ 잘못된 입력입니다. 1-5 사이 숫자를 입력하세요.")
 
 
-# 프로그램 시작
 game = QuizGame()
 game.run()
