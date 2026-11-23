@@ -70,6 +70,19 @@ def add_quiz(quizzes):
     quizzes.append(new_quiz)                     # 퀴즈 목록에 추가
     print("✅ 퀴즈가 추가되었습니다!")
 
+
+def show_list(quizzes):
+    if len(quizzes) == 0:                 # 퀴즈가 없으면
+        print("📭 등록된 퀴즈가 없습니다.")
+        return
+
+    print(f"📋 등록된 퀴즈 목록 (총 {len(quizzes)}개)")
+    print("-" * 40)
+    for i in range(len(quizzes)):
+        print(f"[{i + 1}] {quizzes[i].question}")
+    print("-" * 40)
+
+
 while True:
     print("========================================")
     print("         🎯 나만의 퀴즈 게임 🎯")
@@ -88,7 +101,7 @@ while True:
     elif choice == "2":
         add_quiz(quizzes)
     elif choice == "3":
-        print("퀴즈 목록 (준비 중)")
+        show_list(quizzes)
     elif choice == "4":
         print("점수 확인 (준비 중)")
     elif choice == "5":
