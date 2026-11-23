@@ -1,5 +1,21 @@
+class Quiz:
+    def __init__(self, question, choices, answer):
+        self.question = question
+        self.choices = choices
+        self.answer = answer
+
+    def show(self):
+        print(self.question)
+        for i in range(len(self.choices)):
+            print(f"{i + 1}. {self.choices[i]}")
+
+    def is_correct(self, user_answer):
+        return user_answer == self.answer
+
+
+
+
 while True:
-    # ① 메뉴 출력 (반복마다 매번 보여줌)
     print("========================================")
     print("         🎯 나만의 퀴즈 게임 🎯")
     print("========================================")
@@ -10,10 +26,8 @@ while True:
     print("5. 종료")
     print("========================================")
 
-    # ② 입력받기
     choice = input("선택: ").strip()
 
-    # ③ 고른 번호의 '행동'만 (여기선 메뉴를 다시 찍지 않음)
     if choice == "1":
         print("퀴즈 풀기 (준비 중)")
     elif choice == "2":
