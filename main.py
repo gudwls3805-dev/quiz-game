@@ -135,24 +135,24 @@ class QuizGame:
             print(f"🏆 최고 점수: {self.best_score}문제 정답")
 
     def run(self):
-        self.load()                         # ← 추가: 시작할 때 불러오기
-        while True:
-            self.show_menu()
-            choice = input("선택: ").strip()
-            if choice == "1":
-                self.play_quiz()
-            elif choice == "2":
-                self.add_quiz()
-            elif choice == "3":
-                self.show_list()
-            elif choice == "4":
-                self.check_score()
-            elif choice == "5":
-                print("종료합니다")
-                break
-            else:
-                print("⚠️ 잘못된 입력입니다. 1-5 사이 숫자를 입력하세요.")
-
-
-game = QuizGame()
-game.run()
+        self.load()
+        try:
+            while True:
+                self.show_menu()
+                choice = input("선택: ").strip()
+                if choice == "1":
+                    self.play_quiz()
+                elif choice == "2":
+                    self.add_quiz()
+                elif choice == "3":
+                    self.show_list()
+                elif choice == "4":
+                    self.check_score()
+                elif choice == "5":
+                    print("종료합니다")
+                    break
+                else:
+                    print("⚠️ 잘못된 입력입니다. 1-5 사이 숫자를 입력하세요.")
+        except (KeyboardInterrupt, EOFError):
+            print("\n\n⚠️ 프로그램이 중단되었습니다. 데이터를 저장하고 안전하게 종료합니다.")
+            self.save()
